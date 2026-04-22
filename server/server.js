@@ -12,10 +12,12 @@ const authRoutes = require("./routes/auth");
 const app = express();
 
 app.use(cors({
-  origin: ["http://localhost:3000", "https://your-frontend-url.vercel.app"],
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:3000"
+  ],
   credentials: true
 }));
-
 app.use(express.json());
 
 // routes
