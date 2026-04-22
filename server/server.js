@@ -3,23 +3,28 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const authMiddleware = require("./middleware/authMiddleware"); // ✅ added
-const taskRoutes = require("./routes/task");
+
+const authMiddleware = require("./middleware/authMiddleware");
+
+const taskRoutes = require("./routes/Task");
+const authRoutes = require("./routes/Auth");
+
 const app = express();
+
 app.use(cors({
   origin: ["http://localhost:3000", "https://your-frontend-url.vercel.app"],
   credentials: true
 }));
+
 app.use(express.json());
 
 // routes
-const authRoutes = require("./routes/auth");
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 
-// ✅ protected route
+// protected route
 app.get("/api/protected", authMiddleware, (req, res) => {
-    res.json({ message: "Protected data accessed", user: req.user });
+  res.json({ message: "Protected data accessed", user: req.user });
 });
 
 // DB connection
@@ -29,11 +34,11 @@ mongoose.connect(process.env.MONGO_URI)
 
 // test route
 app.get("/", (req, res) => {
-    res.send("Server is running 🚀");
+  res.send("Server is running 🚀");
 });
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
