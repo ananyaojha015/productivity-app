@@ -6,7 +6,10 @@ const mongoose = require("mongoose");
 const authMiddleware = require("./middleware/authMiddleware"); // ✅ added
 const taskRoutes = require("./routes/task");
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: ["http://localhost:3000", "https://your-frontend-url.vercel.app"],
+  credentials: true
+}));
 app.use(express.json());
 
 // routes
