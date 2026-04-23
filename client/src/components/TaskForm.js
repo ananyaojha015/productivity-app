@@ -8,31 +8,38 @@ function TaskForm({ setRefresh }) {
   const [time, setTime] = useState("");
 
   const handleAdd = async () => {
-    try {
-      const token = localStorage.getItem("token");
+  try {
+    const token = localStorage.getItem("token");
 
-      await axios.post(
-        "https://productivity-app-w6ya.onrender.com/api/tasks",
-        { title, priority, dueDate, time },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // ✅ FIXED
-          },
+    const res = await axios.post(
+      "https://productivity-app-w6ya.onrender.com/api/tasks",
+      {
+        title,
+        priority,
+        dueDate,
+        time
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}` // ✅ FIXED
         }
-      );
+      }
+    );
 
-      setTitle("");
-      setDueDate("");
-      setTime("");
-      setPriority("low");
+    console.log("Task added:", res.data);
 
-      setRefresh(prev => !prev);
+    setTitle("");
+    setPriority("low");
+    setDueDate("");
+    setTime("");
 
-    } catch (err) {
-      console.log("Task error:", err);
-      alert("Task failed ❌");
-    }
-  };
+    setRefresh(prev => !prev);
+
+  } catch (err) {
+    console.log("Add task error:", err.response?.data || err.message);
+    alert("Task failed ❌");
+  }
+};
 
   return (
     <div className="glass p-5 mb-6">

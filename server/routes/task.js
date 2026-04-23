@@ -2,20 +2,28 @@ const express = require("express");
 const router = express.Router();
 const Task = require("../models/Task");
 const authMiddleware = require("../middleware/authMiddleware");
-// ➕ CREATE TASK
+// ➕ CREATE TASK (FIXED)
 router.post("/", authMiddleware, async (req, res) => {
     try {
+        const { title, priority, dueDate, time } = req.body;
+
+        console.log("USER:", req.user);   // debug
+        console.log("BODY:", req.body);   // debug
+
         const task = new Task({
-            user: req.user.id,
-            title: req.body.title,
-            priority: req.body.priority,
-            dueDate: req.body.dueDate
+            user: req.user.id || req.user._id, // ✅ fix
+            title,
+            priority,
+            dueDate,
+            time
         });
 
-        await task.save();
-        res.json(task);
+        const savedTask = await task.save();
+
+        res.status(201).json(savedTask); // ✅ important
 
     } catch (err) {
+        console.log("TASK ERROR:", err); // debug
         res.status(500).json({ error: err.message });
     }
 });
