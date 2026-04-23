@@ -5,6 +5,8 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import axios from "axios";
 
+const API = "https://productivity-app-w6ya.onrender.com";
+
 function Dashboard() {
   const [tasks, setTasks] = useState([]);
   const [refresh, setRefresh] = useState(false);
@@ -13,11 +15,12 @@ function Dashboard() {
   const name = localStorage.getItem("userName");
   const token = localStorage.getItem("token");
 
-  // ✅ FIXED: stable function (no warning)
   const fetchTasks = useCallback(async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/tasks", {
-        headers: { Authorization: token },
+      const res = await axios.get(`${API}/api/tasks`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // ✅ FIXED
+        },
       });
 
       setTasks(res.data);
@@ -26,7 +29,6 @@ function Dashboard() {
     }
   }, [token]);
 
-  // ✅ CLEAN useEffect
   useEffect(() => {
     fetchTasks();
   }, [fetchTasks, refresh]);
@@ -38,10 +40,8 @@ function Dashboard() {
 
   return (
     <div className="min-h-screen p-6">
-
       <div className="max-w-5xl mx-auto">
 
-        {/* HEADER */}
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl text-pink-300">
             Hi, {name || "User"} 👋
@@ -49,29 +49,23 @@ function Dashboard() {
 
           <button
             onClick={handleLogout}
-            className="bg-red-500 px-4 py-1 rounded-lg hover:scale-105 transition"
+            className="bg-red-500 px-4 py-1 rounded-lg"
           >
             Logout
           </button>
         </div>
 
-        {/* TASK FORM */}
         <TaskForm setRefresh={setRefresh} />
 
-        {/* MAIN GRID */}
         <div className="grid md:grid-cols-2 gap-6">
 
-          {/* 📅 CALENDAR */}
-          <div className="glass p-4 shadow-lg">
+          <div className="glass p-4">
             <Calendar
               onChange={setDate}
               value={date}
-
-              // ✅ HIGHLIGHT DATES WITH TASKS
               tileClassName={({ date }) => {
                 const hasTask = tasks.some(task => {
                   const d = new Date(task.dueDate);
-
                   return (
                     d.getDate() === date.getDate() &&
                     d.getMonth() === date.getMonth() &&
@@ -84,7 +78,6 @@ function Dashboard() {
             />
           </div>
 
-          {/* 📋 TASK LIST */}
           <div className="glass p-4 max-h-[450px] overflow-y-auto">
             <TaskList
               tasks={tasks}
@@ -94,7 +87,6 @@ function Dashboard() {
           </div>
 
         </div>
-
       </div>
     </div>
   );

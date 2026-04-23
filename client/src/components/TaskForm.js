@@ -8,16 +8,30 @@ function TaskForm({ setRefresh }) {
   const [time, setTime] = useState("");
 
   const handleAdd = async () => {
-    const token = localStorage.getItem("token");
+    try {
+      const token = localStorage.getItem("token");
 
-    await axios.post(
-      "http://localhost:5000/api/tasks",
-      { title, priority, dueDate, time },
-      { headers: { Authorization: token } }
-    );
+      await axios.post(
+        "https://productivity-app-w6ya.onrender.com/api/tasks",
+        { title, priority, dueDate, time },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // ✅ FIXED
+          },
+        }
+      );
 
-    setTitle("");
-    setRefresh(prev => !prev);
+      setTitle("");
+      setDueDate("");
+      setTime("");
+      setPriority("low");
+
+      setRefresh(prev => !prev);
+
+    } catch (err) {
+      console.log("Task error:", err);
+      alert("Task failed ❌");
+    }
   };
 
   return (
@@ -27,27 +41,39 @@ function TaskForm({ setRefresh }) {
         placeholder="✨ Task title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        className="w-full p-3 mb-3 rounded bg-transparent border border-white/20"
+        className="w-full p-3 mb-3 rounded bg-transparent border border-white/20 text-white"
       />
 
       <div className="flex gap-2 mb-3">
-        <select onChange={(e) => setPriority(e.target.value)}
-          className="p-2 rounded bg-transparent border border-white/20">
+        <select
+          value={priority}
+          onChange={(e) => setPriority(e.target.value)}
+          className="p-2 rounded bg-transparent border border-white/20 text-white"
+        >
           <option value="low">Low</option>
           <option value="medium">Medium</option>
           <option value="high">High</option>
         </select>
 
-        <input type="date"
+        <input
+          type="date"
+          value={dueDate}
           onChange={(e) => setDueDate(e.target.value)}
-          className="p-2 rounded border bg-transparent" />
+          className="p-2 rounded border bg-transparent text-white"
+        />
 
-        <input type="time"
+        <input
+          type="time"
+          value={time}
           onChange={(e) => setTime(e.target.value)}
-          className="p-2 rounded border bg-transparent" />
+          className="p-2 rounded border bg-transparent text-white"
+        />
       </div>
 
-      <button onClick={handleAdd} className="btn-primary w-full">
+      <button
+        onClick={handleAdd}
+        className="btn-primary w-full"
+      >
         Add Task
       </button>
 
