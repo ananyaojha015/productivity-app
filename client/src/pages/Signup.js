@@ -13,7 +13,7 @@ function Signup() {
 
     try {
       const res = await axios.post(
-        "https://productivity-app-w6ya.onrender.com/api/auth/register",
+        "https://productivity-app-w6ya.onrender.com/api/auth/signup",
         {
           name,
           email,
