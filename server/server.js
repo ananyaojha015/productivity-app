@@ -15,7 +15,7 @@ app.use(cors({
   origin: [
     "http://localhost:3000",
     "http://localhost:5173",
-    "https://productivity-app-steel.vercel.app/" // ← replace this
+    "https://productivity-app-steel.vercel.app" // ← replace this
   ],
   credentials: true
 }));
