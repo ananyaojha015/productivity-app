@@ -13,8 +13,9 @@ const app = express();
 
 app.use(cors({
   origin: [
+    "http://localhost:3000",
     "http://localhost:5173",
-    "http://localhost:3000"
+    "https://productivity-app-steel.vercel.app/" // ← replace this
   ],
   credentials: true
 }));
