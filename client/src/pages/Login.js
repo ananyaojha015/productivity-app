@@ -8,29 +8,33 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    try {
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        {
-          email,
-          password,
-        }
-      );
+  try {
+    const res = await axios.post(
+      "https://productivity-app-w6ya.onrender.com/api/auth/login",
+      {
+        email,
+        password,
+      }
+    );
 
-      // ✅ STORE TOKEN
-      localStorage.setItem("token", res.data.token);
+    console.log("LOGIN SUCCESS:", res.data); // ✅ DEBUG
 
-      // ✅ STORE USER NAME (IMPORTANT)
-      localStorage.setItem("userName", res.data.user?.name || "User");
+    // store token
+    localStorage.setItem("token", res.data.token);
 
-      // 👉 go to dashboard
-      navigate("/dashboard");
+    // store name
+    localStorage.setItem("userName", res.data.user?.name || "User");
 
-    } catch (err) {
-      alert("Login failed ❌");
-      console.log(err);
-    }
-  };
+    navigate("/dashboard");
+
+  } catch (err) {
+    console.log("FULL ERROR:", err);
+    console.log("RESPONSE:", err.response);
+    console.log("DATA:", err.response?.data);
+
+    alert(err.response?.data?.message || "Login failed ❌");
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#2a1f2f] via-[#3a2a3f] to-black">
