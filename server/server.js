@@ -12,11 +12,22 @@ const authRoutes = require("./routes/auth");
 const app = express();
 
 app.use(cors({
-  origin: [
-    "http://localhost:3000",
-    "http://localhost:5173",
-    "https://productivity-app-steel.vercel.app" // ← replace this
-  ],
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      "http://localhost:3000",
+      "http://localhost:5173",
+      "https://productivity-app-steel.vercel.app"
+    ];
+
+    // allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(null, true); // 🔥 TEMP: allow all (for debugging)
+    }
+  },
   credentials: true
 }));
 app.use(express.json());
